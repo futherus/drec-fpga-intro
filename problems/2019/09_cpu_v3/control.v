@@ -20,6 +20,7 @@ always @(*) begin
     imm12 = 12'b0;
     has_imm = 1'b0;
     mem_we = 1'b0;
+    branch = 1'b0;
 
     casez ({funct5, funct2, funct3, opcode})
         17'b?????_??_000_0010011: begin // ADDI
@@ -95,15 +96,17 @@ always @(*) begin
             $strobe("(%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
                 "BNE", funct5, funct2, funct3, opcode);
             imm12 = {instr[31], instr[31], instr[7], instr[30:25], instr[11:9]};
+            branch = 1'b1;
+            alu_op = 3'b100;
             /*
-            *   Problem 2:
-            *   Drive other signals here
-            */
+             *   Problem 2:
+             *   Drive other signals here
+             */
         end
         /*
-        *   Problem 3:
-        *   Describe BEQ instruction here
-        */
+         *   Problem 3:
+         *   Describe BEQ instruction here
+         */
         default: begin
             $strobe("(%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
                 "UNKNOWN INSTRUCTION", funct5, funct2, funct3, opcode);
