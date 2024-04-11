@@ -61,9 +61,10 @@ reg_file rf(
 wire [11:0]imm12;
 wire [31:0]imm32 = {{20{imm12[11]}}, imm12};
 
-wire cmp_res = /* Problem 2: comparison result */
-wire branch_taken = /* Problem 2: is branch taken or not ? */
-wire [31:0]branch_target = /* Problem 2: target address bus */
+// Checks for NEQ
+wire cmp_res = (alu_result != 0); /* Problem 2: comparison result */
+wire branch_taken = cmp_res & branch; /* Problem 2: is branch taken or not ? */
+wire [31:0]branch_target = pc + imm32; /* Problem 2: target address bus */
 wire branch;
 
 control control(
