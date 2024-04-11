@@ -9,7 +9,7 @@ module mem_ctrl(
 
 always @(posedge clk) begin
     if (we) begin
-        $display("[%h] <- %h", addr, data);
+        $display("[%h] <- %h\n    FIB: %d", addr, data, data);
         if (addr == 32'h20)
             data_out <= data[15:0];
     end
