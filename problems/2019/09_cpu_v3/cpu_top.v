@@ -24,6 +24,10 @@ mem_ctrl mem_ctrl(
     .we(mem_we), .data_out(data_out)
 );
 
+always @* begin
+    $display("%4d D> data_out: %h", $time, data_out);
+end
+
 core core(
     .clk(clk),
     .instr_data(instr_data), .last_pc(31),
