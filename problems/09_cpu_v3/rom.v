@@ -13,7 +13,7 @@ localparam MEMORY_WORDS = 2**ADDR_WIDTH;
 reg [WIDTH - 1:0]mem[2**ADDR_WIDTH - 1:0];
 
 initial begin
-    $readmemh("samples/fib.txt", mem, 0, MEMORY_WORDS - 1);
+    $readmemh("samples/fib_riscv.txt", mem, 0, MEMORY_WORDS - 1);
 end
 
 always @(posedge clk) begin
