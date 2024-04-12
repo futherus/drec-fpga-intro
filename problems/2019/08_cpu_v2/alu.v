@@ -6,6 +6,7 @@ module alu(
 );
 
 always @(*) begin
+    $display("%4d D> Alu: op: %h, src_a: %h, src_b: %h", $time, op, src_a, src_b);
     case (op)
         3'b000: res = src_a;
         3'b001: res = src_a + src_b;
