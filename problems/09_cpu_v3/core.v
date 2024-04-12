@@ -16,8 +16,11 @@ wire [31:0]pc_next = (pc == last_pc) ? pc : pc_target;
 always @(posedge clk) begin
     pc <= pc_next;
 `ifdef __ICARUS__
-    $strobe("[pc = %h] %h", pc, instr);
-    $strobe("taken = %b target = %h", branch_taken, branch_target);
+    $display("%4d D> [pc = %h] %h", $time, pc, instr);
+    $display("%4d D> taken = %b target = %h", $time, branch_taken, branch_target);
+
+    // $display("%4d D> [pc = %h] %h", $time, pc, instr);
+    // $display("%4d D> taken = %b target = %h", $time, branch_taken, branch_target);
 `endif
 end
 
@@ -62,19 +65,19 @@ wire [11:0]imm12;
 wire [31:0]imm32 = {{20{imm12[11]}}, imm12};
 
 // Checks for NEQ
-wire cmp_res = (alu_result != 0); /* Problem 2: comparison result */
-wire branch_taken = cmp_res & branch; /* Problem 2: is branch taken or not ? */
 wire [31:0]branch_target = pc + imm32; /* Problem 2: target address bus */
-wire branch;
+wire branch_taken;
 
 control control(
     .instr(instr),
+    .alu_result(alu_result),
+
     .imm12(imm12),
     .rf_we(rf_we),
     .alu_op(alu_op),
     .has_imm(has_imm),
     .mem_we(mem_we),
-    .branch(branch)
+    .branch_taken(branch_taken)
 );
 
 endmodule
