@@ -7,4 +7,4 @@ _start:
     call main
 
 _finish:
-    nop
+    j _finish

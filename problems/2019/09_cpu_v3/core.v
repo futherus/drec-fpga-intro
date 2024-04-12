@@ -9,15 +9,15 @@ module core(
     output mem_we
 );
 
-reg [31:0]pc = 32'hFFFFFFFF;
-wire [31:0]pc_target = branch_taken ? branch_target : pc + 1;
+reg [31:0]pc = 32'hFFFFFFFC;
+wire [31:0]pc_target = branch_taken ? branch_target : pc + 4;
 wire [31:0]pc_next = (pc == last_pc) ? pc : pc_target;
 
 always @(posedge clk) begin
     pc <= pc_next;
 `ifdef __ICARUS__
-    $display("%4d D> [pc = %h] %h", $time, pc, instr);
-    $display("%4d D> taken = %b target = %h", $time, branch_taken, branch_target);
+    $strobe("%4d S> [pc = %h] %h", $time, pc, instr);
+    $strobe("%4d S> taken = %b target = %h", $time, branch_taken, branch_target);
 
     // $display("%4d D> [pc = %h] %h", $time, pc, instr);
     // $display("%4d D> taken = %b target = %h", $time, branch_taken, branch_target);
@@ -37,7 +37,7 @@ wire [4:0]rf_raddr0 = rs1;
 wire [31:0]rf_rdata1;
 wire [4:0]rf_raddr1 = rs2;
 
-wire [31:0]rf_wdata = alu_result;
+wire [31:0]rf_wdata = link_reg ? pc + 4 : alu_result;
 wire [4:0]rf_waddr = rd;
 wire rf_we;
 
@@ -61,23 +61,27 @@ reg_file rf(
     .waddr(rf_waddr), .wdata(rf_wdata), .we(rf_we)
 );
 
-wire [11:0]imm12;
-wire [31:0]imm32 = {{20{imm12[11]}}, imm12};
+wire [31:0]imm32;
 
-// Checks for NEQ
-wire [31:0]branch_target = pc + imm32; /* Problem 2: target address bus */
+// NOTE: JALR adds imm12 and rs1, then sets least-significant bit to zero. We
+// need to zero LSB after evaluation, it can be done here.
+wire [31:0]branch_target = indirect_branch ? alu_result : pc + imm32; /* Problem 2: target address bus */
 wire branch_taken;
+wire link_reg;
+wire indirect_branch;
 
 control control(
     .instr(instr),
     .alu_result(alu_result),
 
-    .imm12(imm12),
+    .imm32(imm32),
     .rf_we(rf_we),
     .alu_op(alu_op),
     .has_imm(has_imm),
     .mem_we(mem_we),
-    .branch_taken(branch_taken)
+    .branch_taken(branch_taken),
+    .link_reg(link_reg),
+    .indirect_branch(indirect_branch)
 );
 
 endmodule

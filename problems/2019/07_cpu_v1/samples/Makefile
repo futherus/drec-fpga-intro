@@ -10,6 +10,12 @@ TXTS=$(SRCS:%.s=%.txt)
 
 all: $(TXTS)
 
+riscv-test:
+	riscv64-linux-gnu-gcc -nostdlib -fomit-frame-pointer -O1 -mabi=ilp32 -march=rv32i -c fib_riscv.c -o fib_riscv.o
+	riscv64-linux-gnu-as -march=rv32i -mabi=ilp32 -c loader.s -o loader.o
+	riscv64-linux-gnu-ld -Ttext=0x1000 -melf32lriscv loader.o fib_riscv.o -o fib_riscv.out
+	make fib_riscv.txt # для получения файла прошивки ROM
+
 %.txt: %.bin
 	hexdump -v -e '"%08x\n"' $^ > $@
 

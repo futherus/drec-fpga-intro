@@ -6,7 +6,7 @@ typedef unsigned char uint8_t;
 void main() {
     uint32_t first = 0, second = 1, next, i = 0;
 
-    for (i = 0; i != 12; i++) {
+    for (i = 0; i != 8; i++) {
         next = first + second;
         *(volatile uint32_t *)OUT_ADDR = next;
         first = second;
