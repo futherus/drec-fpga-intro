@@ -8,7 +8,7 @@ _start:
     li      t2, 0   # fib(-1)
 
     li      t3, 1   # n counter
-    li      t4, 12  # max n counter
+    li      t4, 10  # max n counter
 
 _next:
     add     t2, t1,     t0  # fib(n) = fib(n - 1) + fib(n - 2)
@@ -17,10 +17,11 @@ _next:
     mv      t0, t1
     mv      t1, t2
     addi    t3, t3,     1       # increment counter
+    beq     t3, t4,     _finish # STUB TO TEST BEQ
     bne     t3, t4,     _next   # next iteration
 
 _finish:
     nop
-.rept 20
+.rept 19
     nop
 .endr
