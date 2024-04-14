@@ -88,6 +88,13 @@ always @(*) begin
             alu_op = 3'b111;
             has_imm = 1'b0;
         end
+        17'b00000_01_000_0110011: begin
+            $monitor("%4d M> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
+                $time, "MUL", funct5, funct2, funct3, opcode);
+            rf_we = 1'b1;
+            alu_op = 3'b010;
+            has_imm = 1'b0;
+        end
         17'b?????_??_010_0100011: begin // SW
             $monitor("%4d M> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
                 $time, "SW", funct5, funct2, funct3, opcode);
