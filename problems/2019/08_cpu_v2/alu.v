@@ -10,6 +10,7 @@ always @(*) begin
     case (op)
         3'b000: res = src_a;
         3'b001: res = src_a + src_b;
+        3'b010: res = src_a * src_b;
         3'b100: res = src_a ^ src_b;
         3'b110: res = src_a | src_b;
         3'b111: res = src_a & src_b;
