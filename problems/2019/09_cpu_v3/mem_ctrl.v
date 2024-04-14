@@ -10,7 +10,7 @@ module mem_ctrl(
 always @(posedge clk) begin
 //     $strobe("%4d S> [%h] <- %h, we: %d\n    FIB: %d", $time, addr, data, we, data);
     if (we) begin
-        $display("%4d D> [%h] <- %h, we: %d\n    FIB: %h", $time, addr, data, we, data);
+        $display("%4d D> [%h] <- %h, we: %d\n    WRITE: %h", $time, addr, data, we, data);
         if (addr == 32'h20)
             data_out <= data[15:0];
     end
