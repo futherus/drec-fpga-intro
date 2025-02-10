@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module invN_tb;
+module sgnextN_tb;
 
 localparam N = 12;
 localparam M = 32;
