@@ -1,0 +1,12 @@
+`ifndef CMP_UNIT_VH
+`define CMP_UNIT_VH
+
+`define CMPOP_WIDTH 3
+`define CMPOP_BEQ  `CMPOP_WIDTH'd00
+`define CMPOP_BNE  `CMPOP_WIDTH'd01
+`define CMPOP_BLT  `CMPOP_WIDTH'd02
+`define CMPOP_BGE  `CMPOP_WIDTH'd03
+`define CMPOP_BLTU `CMPOP_WIDTH'd04
+`define CMPOP_BGEU `CMPOP_WIDTH'd05
+
+`endif
