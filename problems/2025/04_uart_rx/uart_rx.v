@@ -81,12 +81,12 @@ end
 
 always @(*) begin
     if ((state == STOP) && en && (i_rx == 1'b1)) begin
-        o_data <= data;
-        o_data_vld <= 1'b1;
+        o_data = data;
+        o_data_vld = 1'b1;
     end
     else begin
-        o_data <= 8'dX;
-        o_data_vld <= 1'b0;
+        o_data = 8'dX;
+        o_data_vld = 1'b0;
     end
 end
 
