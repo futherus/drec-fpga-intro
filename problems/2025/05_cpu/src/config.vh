@@ -1,5 +1,5 @@
-`define IMEM_FILE_TXT   "samples/fib_riscv.txt"
-`define IMEM_ADDR_WIDTH 6
+`define IMEM_FILE_TXT   "samples/addi.txt"
+`define IMEM_ADDR_WIDTH 3
 
 `define DMEM_ADDR_WIDTH 5
 

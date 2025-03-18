@@ -32,8 +32,8 @@ imem #(
     .DATA_WIDTH     (32              )
 )
 imem(
-    .i_addr         (core2imem_addr  ),
-    .o_data         (imem2core_data  )
+    .i_addr         (core2imem_addr[`IMEM_ADDR_WIDTH-1:0]),
+    .o_data         (imem2core_data                      )
 );
 
 dmem #(
@@ -41,12 +41,12 @@ dmem #(
      .DATA_WIDTH    (32              )
 )
 dmem(
-     .clk           (clk             ),
-     .i_addr        (xbar2dmem_addr  ),
-     .i_data        (xbar2dmem_data  ),
-     .i_we          (xbar2dmem_wren  ),
-     .i_mask        (xbar2dmem_mask  ),
-     .o_data        (dmem2xbar_data  )
+     .clk           (clk                                 ),
+     .i_addr        (xbar2dmem_addr[`DMEM_ADDR_WIDTH-1:0]),
+     .i_data        (xbar2dmem_data                      ),
+     .i_we          (xbar2dmem_wren                      ),
+     .i_mask        (xbar2dmem_mask                      ),
+     .o_data        (dmem2xbar_data                      )
 );
 
 mem_xbar #(
@@ -63,8 +63,8 @@ mem_xbar(
     .o_data        (xbar2core_data  ),
     .o_dmem_addr   (xbar2dmem_addr  ),
     .o_dmem_data   (xbar2dmem_data  ),
-    .o_dmem_mask   (xbar2dmem_mask  ),
     .o_dmem_wren   (xbar2dmem_wren  ),
+    .o_dmem_mask   (xbar2dmem_mask  ),
     .i_dmem_data   (dmem2xbar_data  ),
     .o_mmio_addr   (o_mmio_addr     ),
     .o_mmio_data   (o_mmio_data     ),
