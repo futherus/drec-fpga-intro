@@ -11,10 +11,9 @@ RTL_LIST := 		\
 	src/dmem.v		\
 	src/mem_xbar.v	\
 	src/lsu.v		\
-	src/mux4.v		\
 
-sim: $(TB_LIST) $(RTL_LIST)
-	iverilog -I./src/ $^ -o sim
+sim: preprocess_instr $(TB_LIST) $(RTL_LIST)
+	iverilog -I./src/ $(TB_LIST) $(RTL_LIST) -o sim
 	./sim
 
 waves: dump.vcd
@@ -23,7 +22,7 @@ waves: dump.vcd
 samples:
 	$(MAKE) -C samples/
 
-syn:
+syn: preprocess_instr
 	quartus_sh --flow compile fpga
 
 gui:
@@ -31,6 +30,11 @@ gui:
 
 fpga:
 	quartus_pgm -c "USB-Blaster" -m JTAG -o "p;output/fpga.sof"
+
+preprocess_instr: src/instrs.mac.vh
+
+src/instrs.mac.vh: src/instrs.yaml
+	cd src && python instrs.py
 
 clean:
 	rm -rf sim dump.vcd

@@ -48,7 +48,6 @@ set_global_assignment -name SMART_RECOMPILE OFF
 set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 set_global_assignment -name VERILOG_FILE src/fpga_top.v
 set_global_assignment -name VERILOG_FILE src/system_top.v
-set_global_assignment -name VERILOG_FILE src/mux4.v
 set_global_assignment -name VERILOG_FILE src/dmem.v
 set_global_assignment -name VERILOG_FILE src/reg_file.v
 set_global_assignment -name VERILOG_FILE src/mem_xbar.v

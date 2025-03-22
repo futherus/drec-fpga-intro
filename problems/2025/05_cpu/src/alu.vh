@@ -12,5 +12,6 @@
 `define ALUOP_SRA  `ALUOP_WIDTH'd07
 `define ALUOP_OR   `ALUOP_WIDTH'd08
 `define ALUOP_AND  `ALUOP_WIDTH'd09
+`define ALUOP_X    `ALUOP_WIDTH'dX
 
 `endif

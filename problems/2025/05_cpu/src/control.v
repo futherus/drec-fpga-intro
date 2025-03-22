@@ -27,21 +27,32 @@ wire [4:0] funct5 = i_instr[31:27];
 
 always @(*) begin
     casez ({funct5, funct2, funct3, opcode})
-        17'b?????_??_000_0010011: begin // ADDI
-            $strobe("%4d S> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
-                     $time, "ADDI", funct5, funct2, funct3, opcode);
+        `define OP(OPER__, ENCODING__, ALUOP__, ALU1__, ALU2__, WBSEL__, WB__, CMPOP__, IS_BRANCH__, IS_JUMP__, IS_STORE__, STORE_MASK__)   \
+            ENCODING__: begin                                                                                                               \
+                $strobe("%4d S> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",                                                   \
+                        $time, `"OPER__`", funct5, funct2, funct3, opcode);                                                                 \
+                                                                                                                                            \
+                o_alu_op     = ALUOP__;                                                                                                     \
+                o_alu_sel1   = ALU1__;                                                                                                      \
+                o_alu_sel2   = ALU2__;                                                                                                      \
+                o_wb_sel     = WBSEL__;                                                                                                     \
+                o_wb_en      = WB__;                                                                                                        \
+                o_cmp_op     = CMPOP__;                                                                                                     \
+                o_is_branch  = IS_BRANCH__;                                                                                                 \
+                o_is_jump    = IS_JUMP__;                                                                                                   \
+                o_is_store   = IS_STORE__;                                                                                                  \
+                o_store_mask = STORE_MASK__;                                                                                                \
+            end
 
-            o_alu_op     = `ALUOP_ADD;
-            o_alu_sel1   = `ALUSEL1_REG1;
-            o_alu_sel2   = `ALUSEL2_IIMM;
-            o_cmp_op     = `CMPOP_X;
-            o_is_branch  = 1'b0;
-            o_is_jump    = 1'b0;
-            o_wb_sel     = `WBSEL_ALURES;
-            o_wb_en      = 1'b1;
-            o_is_store   = 1'b0;
-            o_store_mask = 4'b0000;
-        end
+        `include "instrs.mac.vh"
+
+        `undef OP
+
+    default: begin
+        $display("%4d D> ILLEGAL INSTRUCTION, funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
+                 $time, funct5, funct2, funct3, opcode);
+        $finish;
+    end
     endcase
 end
 

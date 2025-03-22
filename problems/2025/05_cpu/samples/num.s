@@ -11,4 +11,4 @@ _loop:
     bne  x5, x6, _loop
 
 _finish:
-    nop
+    j _finish

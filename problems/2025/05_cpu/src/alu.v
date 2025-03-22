@@ -18,7 +18,7 @@ always @(*) begin
         `ALUOP_SRA:  o_res = $signed(i_a) >>> i_b[4:0];
         `ALUOP_OR:   o_res = i_a | i_b;
         `ALUOP_AND:  o_res = i_a & i_b;
-        default:     o_res = 32'hEBADF00D;
+        `ALUOP_X:    o_res = 32'dX;
     endcase
 end
 

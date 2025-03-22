@@ -22,7 +22,7 @@ wire [29:0] pc_next;
 
 wire [31:0] reg1;
 wire [31:0] reg2;
-reg  [31:0] reg_wb;
+reg  [31:0] wb_data;
 
 wire [31:0] lsu_load_data;
 
@@ -56,7 +56,7 @@ wire  [4:0] rs2  = ins[24:20];
 wire [31:0] iimm = {{20{ins[31]}}, ins[31:20]};
 wire [31:0] simm = {{20{ins[31]}}, ins[31:25], ins[11:7]};
 wire [31:0] bimm = {{19{ins[31]}}, ins[31], ins[7], ins[30:25], ins[11:8], 1'b0};
-wire [31:0] uimm = {{12{ins[31]}}, ins[31:12]};
+wire [31:0] uimm = {ins[31:12], {12{1'b0}}};
 wire [31:0] jimm = {{11{ins[31]}}, ins[31], ins[19:12], ins[20], ins[30:21], 1'b0};
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +69,7 @@ always @(*) begin
         `ALUSEL1_BIMM: alu_opnd1 = bimm;
         `ALUSEL1_JIMM: alu_opnd1 = jimm;
         `ALUSEL1_REG1: alu_opnd1 = reg1;
+        `ALUSEL1_X   : alu_opnd1 = 32'dX;
     endcase
 end
 
@@ -77,16 +78,18 @@ always @(*) begin
         `ALUSEL2_REG2: alu_opnd2 = reg2;
         `ALUSEL2_IIMM: alu_opnd2 = iimm;
         `ALUSEL2_SIMM: alu_opnd2 = simm;
-        `ALUSEL2_PC  : alu_opnd2 = pc;
+        `ALUSEL2_PC  : alu_opnd2 = {pc, 2'b0};
+        `ALUSEL2_X   : alu_opnd2 = 32'dX;
     endcase
 end
 
 always @(*) begin
     case (wb_sel)
-        `WBSEL_UIMM  : reg_wb = uimm;
-        `WBSEL_ALURES: reg_wb = alu_res;
-        `WBSEL_LSU   : reg_wb = lsu_load_data;
-        `WBSEL_PC_INC: reg_wb = pc_inc;
+        `WBSEL_UIMM  : wb_data = uimm;
+        `WBSEL_ALURES: wb_data = alu_res;
+        `WBSEL_LSU   : wb_data = lsu_load_data;
+        `WBSEL_PC_INC: wb_data = {pc_inc, 2'b0};
+        `WBSEL_X     : wb_data = 32'dX;
     endcase
 end
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,7 +99,7 @@ end
 ///////////////////////////////////////////////////////////////////////////////
 wire is_taken = is_jump || (is_branch && cmp_res);
 
-assign pc_next = is_taken ? alu_res : pc_inc;
+assign pc_next = is_taken ? alu_res[31:2] : pc_inc;
 
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -123,14 +126,14 @@ alu alu(
 );
 
 reg_file reg_file(
-    .clk        (clk   ),
-    .i_rd_addr1 (rs1   ),
-    .o_rd_data1 (reg1  ),
-    .i_rd_addr2 (rs2   ),
-    .o_rd_data2 (reg2  ),
-    .i_wr_addr  (rd    ),
-    .i_wr_data  (reg_wb),
-    .i_wr_en    (wb_en )
+    .clk        (clk    ),
+    .i_rd_addr1 (rs1    ),
+    .o_rd_data1 (reg1   ),
+    .i_rd_addr2 (rs2    ),
+    .o_rd_data2 (reg2   ),
+    .i_wr_addr  (rd     ),
+    .i_wr_data  (wb_data),
+    .i_wr_en    (wb_en  )
 );
 
 control control(
