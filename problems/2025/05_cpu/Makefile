@@ -31,7 +31,7 @@ gui:
 fpga:
 	quartus_pgm -c "USB-Blaster" -m JTAG -o "p;output/fpga.sof"
 
-preprocess_instr: src/instrs.mac.vh
+preprocess_instr: src/instrs.mac.vh src/instrs.py
 
 src/instrs.mac.vh: src/instrs.yaml
 	cd src && python instrs.py

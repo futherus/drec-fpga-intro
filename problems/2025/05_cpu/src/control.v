@@ -29,8 +29,8 @@ always @(*) begin
     casez ({funct5, funct2, funct3, opcode})
         `define OP(OPER__, ENCODING__, ALUOP__, ALU1__, ALU2__, WBSEL__, WB__, CMPOP__, IS_BRANCH__, IS_JUMP__, IS_STORE__, STORE_MASK__)   \
             ENCODING__: begin                                                                                                               \
-                $strobe("%4d S> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",                                                   \
-                        $time, `"OPER__`", funct5, funct2, funct3, opcode);                                                                 \
+                // $strobe("%4d S> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",                                                   \
+                //         $time, OPER__, funct5, funct2, funct3, opcode);                                                                     \
                                                                                                                                             \
                 o_alu_op     = ALUOP__;                                                                                                     \
                 o_alu_sel1   = ALU1__;                                                                                                      \
@@ -51,7 +51,17 @@ always @(*) begin
     default: begin
         $display("%4d D> ILLEGAL INSTRUCTION, funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",
                  $time, funct5, funct2, funct3, opcode);
-        $finish;
+
+        o_alu_op     = `ALUOP_WIDTH'dX;
+        o_alu_sel1   = 2'dX;
+        o_alu_sel2   = 2'dX;
+        o_wb_sel     = 2'dX;
+        o_wb_en      = 1'b0;
+        o_cmp_op     = 1'b0;
+        o_is_branch  = 1'b0;
+        o_is_jump    = 1'b0;
+        o_is_store   = 1'b0;
+        o_store_mask = 4'dX;
     end
     endcase
 end

@@ -69,7 +69,6 @@ always @(*) begin
         `ALUSEL1_BIMM: alu_opnd1 = bimm;
         `ALUSEL1_JIMM: alu_opnd1 = jimm;
         `ALUSEL1_REG1: alu_opnd1 = reg1;
-        `ALUSEL1_X   : alu_opnd1 = 32'dX;
     endcase
 end
 
@@ -79,7 +78,6 @@ always @(*) begin
         `ALUSEL2_IIMM: alu_opnd2 = iimm;
         `ALUSEL2_SIMM: alu_opnd2 = simm;
         `ALUSEL2_PC  : alu_opnd2 = {pc, 2'b0};
-        `ALUSEL2_X   : alu_opnd2 = 32'dX;
     endcase
 end
 
@@ -89,7 +87,6 @@ always @(*) begin
         `WBSEL_ALURES: wb_data = alu_res;
         `WBSEL_LSU   : wb_data = lsu_load_data;
         `WBSEL_PC_INC: wb_data = {pc_inc, 2'b0};
-        `WBSEL_X     : wb_data = 32'dX;
     endcase
 end
 ///////////////////////////////////////////////////////////////////////////////

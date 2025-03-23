@@ -38,7 +38,9 @@ mmio_xbar mmio_xbar(
     .o_hexd_wren(hexd_wren      )
 );
 
-hex_display hex_display(
+hex_display #(
+    .CNT_WIDTH(14)
+) hex_display(
     .clk        (clk            ),
     .rst_n      (rst_n          ),
     .i_data     (hexd_data      ),

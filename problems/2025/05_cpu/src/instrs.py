@@ -43,7 +43,7 @@ with open("instrs.mac.vh", "w") as file:
         if not m:
             print(f"{n}: Wrong oper format: {d['oper']}")
             fail = True
-        out += f"{d['oper']:>4}, "
+        out += f"\"{d['oper']}\", "
 
         m = re.match(r'[01?]{5}_[01?]{2}_[01?]{3}_[01?]{7}', d['enc'])
         if not m:
