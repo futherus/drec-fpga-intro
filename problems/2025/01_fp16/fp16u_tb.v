@@ -1,9 +1,11 @@
+`timescale 1ns/1ps
+
 module fp16u_tb;
 
-reg clk = 1'b0;
+reg clk = 1'b1;
 
 always begin
-    #1 clk <= ~clk;
+    #0.5 clk <= ~clk;
 end
 
 wire [15:0] a, b, c, z;
@@ -38,10 +40,12 @@ wire signed [14:0] diff = $signed(c[14:0]) - $signed(z[14:0]);
 always @(*) begin
     if (z_bexp == 5'h0) // Zero/denormal
         ok = (c_bexp == 5'h00) && (c_mant == 10'h0) && (c_sign == z_sign);
-    else if (z_bexp == 5'h1F) // Inf/NaN
+    else if (z_bexp == 5'h1F && z_mant == 10'h0) // Inf
         ok = (c_bexp == 5'h1F) && (c_mant == 10'h0) && (c_sign == z_sign);
+    else if (z_bexp == 5'h1F && z_mant != 10'h0) // NaN
+        ok = (c_bexp == 5'h1F) && (c_mant != 10'h0) && (c_sign == z_sign);
     else
-        ok = ($abs(diff) < 2) && (c_sign == z_sign);
+        ok = ($abs(diff) == 0) && (c_sign == z_sign);
 end
 
 always @(posedge clk) begin
