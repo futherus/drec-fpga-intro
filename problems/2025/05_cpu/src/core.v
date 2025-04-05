@@ -1,5 +1,6 @@
 `include "alu.vh"
 `include "cmp.vh"
+`include "lsu.vh"
 `include "control.vh"
 
 module core(
@@ -40,7 +41,7 @@ wire                    is_jump;
 wire              [1:0] wb_sel;
 wire                    wb_en;
 wire                    is_store;
-wire              [3:0] store_mask;
+wire [`LSUOP_WIDTH-1:0] lsu_op;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Decode instruction.
@@ -144,14 +145,14 @@ control control(
     .o_wb_sel     (wb_sel      ),
     .o_wb_en      (wb_en       ),
     .o_is_store   (is_store    ),
-    .o_store_mask (store_mask  )
+    .o_lsu_op     (lsu_op      )
 );
 
 lsu lsu(
     .i_is_store   (is_store     ),
+    .i_op         (lsu_op       ),
     .i_addr       (alu_res      ),
     .i_store_data (reg2         ),
-    .i_store_mask (store_mask   ),
     .o_load_data  (lsu_load_data),
 
     .o_is_store   (o_mem_we  ),

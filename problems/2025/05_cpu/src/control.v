@@ -1,5 +1,6 @@
 `include "alu.vh"
 `include "cmp.vh"
+`include "lsu.vh"
 `include "control.vh"
 
 module control(
@@ -17,7 +18,7 @@ module control(
     output reg                     o_wb_en,
 
     output reg                     o_is_store,
-    output reg               [3:0] o_store_mask
+    output reg  [`LSUOP_WIDTH-1:0] o_lsu_op
 );
 
 wire [6:0] opcode = i_instr[6:0];
@@ -27,7 +28,7 @@ wire [4:0] funct5 = i_instr[31:27];
 
 always @(*) begin
     casez ({funct5, funct2, funct3, opcode})
-        `define OP(OPER__, ENCODING__, ALUOP__, ALU1__, ALU2__, WBSEL__, WB__, CMPOP__, IS_BRANCH__, IS_JUMP__, IS_STORE__, STORE_MASK__)   \
+        `define OP(OPER__, ENCODING__, ALUOP__, ALU1__, ALU2__, WBSEL__, WB__, CMPOP__, IS_BRANCH__, IS_JUMP__, IS_STORE__, LSUOP__)        \
             ENCODING__: begin                                                                                                               \
                 // $strobe("%4d S> (%s) funct5 = %h, funct2 = %h, funct3 = %h, opcode = %h",                                                   \
                 //         $time, OPER__, funct5, funct2, funct3, opcode);                                                                     \
@@ -41,7 +42,7 @@ always @(*) begin
                 o_is_branch  = IS_BRANCH__;                                                                                                 \
                 o_is_jump    = IS_JUMP__;                                                                                                   \
                 o_is_store   = IS_STORE__;                                                                                                  \
-                o_store_mask = STORE_MASK__;                                                                                                \
+                o_lsu_op     = LSUOP__;                                                                                                     \
             end
 
         `include "instrs.mac.vh"
@@ -57,11 +58,11 @@ always @(*) begin
         o_alu_sel2   = 2'dX;
         o_wb_sel     = 2'dX;
         o_wb_en      = 1'b0;
-        o_cmp_op     = 1'b0;
+        o_cmp_op     = `CMPOP_WIDTH'dX;
         o_is_branch  = 1'b0;
         o_is_jump    = 1'b0;
         o_is_store   = 1'b0;
-        o_store_mask = 4'dX;
+        o_lsu_op     = `LSUOP_WIDTH'dX;
     end
     endcase
 end

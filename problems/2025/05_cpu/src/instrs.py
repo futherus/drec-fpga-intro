@@ -15,6 +15,7 @@ disclaimer = f"""
 ///////////////////////////////////////////////////////////////////////////////
 
 """
+
 with open("instrs.yaml") as stream:
     try:
         lines = yaml.safe_load(stream)
@@ -25,12 +26,13 @@ print(f"Preprocessing {len(lines)} instrs")
 with open("instrs.mac.vh", "w") as file:
     file.write(disclaimer)
 
-    keys = ['oper', 'enc', 'aluop', 'alu1', 'alu2', 'wbsel', 'wb_en', 'cmpop', 'is_branch', 'is_jump', 'is_store', 'store_mask']
+    keys = ['oper', 'enc', 'aluop', 'alu1', 'alu2', 'wbsel', 'wb_en', 'cmpop', 'is_branch', 'is_jump', 'is_store', 'lsuop']
     aluop = ["ADD", "SUB", "SLL", "SLT", "SLTU", "XOR", "SRL", "SRA", "OR", "AND", "X"]
     alu1  = ["UIMM", "BIMM", "JIMM", "REG1", "X"]
     alu2  = ["REG2", "IIMM", "SIMM", "PC", "X"]
     wbsel = ["UIMM", "ALURES", "LSU", "PC_INC", "X"]
     cmpop = ["BEQ", "BNE", "BLT", "BGE", "BLTU", "BGEU", "X"]
+    lsuop = ["B", "H", "W", "BU", "HU", "X"]
 
     unique_enc = {}
 
@@ -104,11 +106,10 @@ with open("instrs.mac.vh", "w") as file:
             fail = True
         out += f"1'b{d['is_store']}, "
 
-        m = re.match(r'[01]{4}', d['store_mask'])
-        if not m:
-            print(f"{n}: Wrong store_mask format: {d['store_mask']}")
+        if d['lsuop'] not in lsuop:
+            print(f"{n}: Wrong lsuop format: {d['lsuop']}")
             fail = True
-        out += f"4'b{d['store_mask']}, "
+        out += f"`LSUOP_{d['lsuop']}, "
 
         if fail:
             print(f"=== Failed on instr {n} ===")
