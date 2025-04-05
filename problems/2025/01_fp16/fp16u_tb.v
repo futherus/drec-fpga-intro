@@ -45,7 +45,7 @@ always @(*) begin
     else if (z_bexp == 5'h1F && z_mant != 10'h0) // NaN
         ok = (c_bexp == 5'h1F) && (c_mant != 10'h0) && (c_sign == z_sign);
     else
-        ok = ($abs(diff) == 0) && (c_sign == z_sign);
+        ok = ($abs(diff) == 15'd0) && (c_sign == z_sign);
 end
 
 always @(posedge clk) begin

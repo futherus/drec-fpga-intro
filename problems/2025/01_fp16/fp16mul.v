@@ -21,22 +21,47 @@ wire       b_s = i_b[15];
 wire [4:0] b_e = i_b[14:10];
 wire [9:0] b_m = (b_e == 5'd0) ? 10'd0 : i_b[9:0]; // Perform DAZ.
 
+///////////////////////////////////////////////////////////////////////////////
 // 0) Result sign.
+///////////////////////////////////////////////////////////////////////////////
 wire      res_s = a_s ^ b_s;
 reg [4:0] res_e;
 reg [9:0] res_m;
 assign o_res = {res_s, res_e, res_m};
+///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 // 1) Add exponents, multiply mantissas.
-wire [21:0] m_mul = {1'b1, a_m} * {1'b1, b_m};
-wire  [5:0] e_add = a_e + b_e - E_BIAS;
+///////////////////////////////////////////////////////////////////////////////
+reg [21:0] m_mul;
+reg  [5:0] e_mul;
+always @(*) begin
+    if (a_e + b_e < E_BIAS) begin
+        e_mul = 5'd0;
+        m_mul = 22'd0;
+    end
+    else if (a_e + b_e - E_BIAS > 5'b11111) begin
+        e_mul = 5'b11111;
+        m_mul = 22'd0;
+    end
+    else begin
+        e_mul = a_e + b_e - E_BIAS;
+        m_mul = {1'b1, a_m} * {1'b1, b_m};
+    end
+end
+///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 // 2) Normalize if mantissa in (4, 2].
+///////////////////////////////////////////////////////////////////////////////
 wire need_normalize = m_mul[21];
 wire [20:0] m_norm = (need_normalize) ? m_mul[21:1] : m_mul[20:0];
-wire  [5:0] e_norm = (need_normalize) ? e_add + 6'd1 : e_add;
+wire  [5:0] e_norm = (need_normalize) ? e_mul + 6'd1 : e_mul;
+///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 // 3) RoundTiesToEven.
+///////////////////////////////////////////////////////////////////////////////
 reg [9:0] m_round;
 reg [4:0] e_round;
 always @(*) begin
@@ -45,7 +70,7 @@ always @(*) begin
         if (m_round == 10'd0) begin
             // Mantissa overflowed, increment exponent.
             e_round = e_norm[4:0] + 5'd1;
-            // if (res_e == 5'b11111) we obtain {S, 1...1, 0} = +-inf, as it should be.
+            // if (e_round == 5'b11111) we obtain {S, 1...1, 0} = +-inf, as it should be.
         end
         else begin
             e_round = e_norm[4:0];
@@ -56,13 +81,16 @@ always @(*) begin
         e_round = e_norm[4:0];
     end
 end
+///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 // 4) Handle special cases and obtain final result.
 // a=NaN || b=NaN    => res = NaN
 // a=inf && b=0      => res = NaN
 // a=inf && b=inf    => res = inf
 // a=inf && b=normal => res = inf
 // a=0   && b=normal => res = 0
+///////////////////////////////////////////////////////////////////////////////
 always @(*) begin
     if (a_e == 5'b11111 || b_e == 5'b11111) begin
         if (a_m != 10'd0 || b_m != 10'd0) begin
@@ -92,8 +120,11 @@ always @(*) begin
         res_e = e_round;
     end
 end
+///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
 // RoundTiesToEven details.
+///////////////////////////////////////////////////////////////////////////////
 wire guard_bit = m_norm[9];
 wire round_bit = m_norm[8];
 // If need_normalize == 1, LSB of m_mul is dropped, therefore we OR it in sticky_bit.
@@ -117,5 +148,6 @@ always @(*) begin
         end
     endcase
 end
+///////////////////////////////////////////////////////////////////////////////
 
 endmodule
