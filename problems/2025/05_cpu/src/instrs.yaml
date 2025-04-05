@@ -4,7 +4,7 @@
 [ AUIPC, '?????_??_???_0010111',   ADD, UIMM,   PC, ALURES,  1,     X,      0,    0,     0,      X],
 
 [   JAL, '?????_??_???_1101111',   ADD, JIMM,   PC, PC_INC,  1,     X,      0,    1,     0,      X],
-[   JAL, '?????_??_000_1100111',   ADD, REG1, IIMM, PC_INC,  1,     X,      0,    1,     0,      X],
+[  JALR, '?????_??_000_1100111',   ADD, REG1, IIMM, PC_INC,  1,     X,      0,    1,     0,      X],
 [   BEQ, '?????_??_000_1100011',   ADD, BIMM,   PC,      X,  0,   BEQ,      1,    0,     0,      X],
 [   BNE, '?????_??_001_1100011',   ADD, BIMM,   PC,      X,  0,   BNE,      1,    0,     0,      X],
 [   BLT, '?????_??_100_1100011',   ADD, BIMM,   PC,      X,  0,   BLT,      1,    0,     0,      X],

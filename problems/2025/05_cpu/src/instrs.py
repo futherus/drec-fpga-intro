@@ -34,6 +34,7 @@ with open("instrs.mac.vh", "w") as file:
     cmpop = ["BEQ", "BNE", "BLT", "BGE", "BLTU", "BGEU", "X"]
     lsuop = ["B", "H", "W", "BU", "HU", "X"]
 
+    unique_oper = {}
     unique_enc = {}
 
     for n, line in enumerate(lines):
@@ -45,6 +46,10 @@ with open("instrs.mac.vh", "w") as file:
         if not m:
             print(f"{n}: Wrong oper format: {d['oper']}")
             fail = True
+        if d['oper'] in unique_oper:
+            print(f"{n}: Oper name collision with instr {unique_oper[d['oper']]}: {d['oper']}")
+            fail = True
+        unique_oper[d['oper']] = n
         out += f"\"{d['oper']}\", "
 
         m = re.match(r'[01?]{5}_[01?]{2}_[01?]{3}_[01?]{7}', d['enc'])
