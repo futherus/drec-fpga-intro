@@ -14,7 +14,7 @@ reg rst_n, RSTN_d;
 
 always @(posedge CLK) begin
     rst_n  <= RSTN_d;
-	RSTN_d <= RSTN;
+    RSTN_d <= RSTN;
 end
 
 system_top system_top(

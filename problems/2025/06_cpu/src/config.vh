@@ -1,5 +1,5 @@
-`define IMEM_FILE_TXT   "samples/fib_riscv.txt"
-`define IMEM_FILE_MIF   "samples/fib_riscv.mif"
+`define IMEM_FILE_TXT   "samples/fib_recursive.txt"
+`define IMEM_FILE_MIF   "samples/fib_recursive.mif"
 
 `define XBAR_MMIO_START 30'h0000
 `define XBAR_MMIO_LIMIT 30'h03FF

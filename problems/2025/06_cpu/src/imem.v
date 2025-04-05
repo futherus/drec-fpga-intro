@@ -21,6 +21,7 @@ end
 
 always @(posedge clk or posedge rst) begin
     if (rst)
+        // FIXME: А кто гарантирует, что SRAM по rst выдает нулевую ячейку?
         addr_d <= 32'b0;
     else
         addr_d <= i_addr;
