@@ -31,7 +31,7 @@ assign o_res = {res_s, res_e, res_m};
 wire [5:0] e_diff = {1'b0, a_e} - {1'b0, b_e};
 wire need_swap = e_diff[5] || (e_diff == 6'h0 && a_m < b_m);
 
-wire [4:0] e_abs_diff = need_swap ? -e_diff : e_diff;
+wire [4:0] e_abs_diff = need_swap ? -e_diff[4:0] : e_diff[4:0];
 wire       x_s = need_swap ? b_s : a_s;
 wire [4:0] x_e = need_swap ? b_e : a_e;
 wire [9:0] x_m = need_swap ? b_m : a_m;
@@ -47,16 +47,10 @@ wire oper = x_s ^ y_s;  // 0 => '+', 1 => '-'
 
 reg [42:0] x_mshifted;
 reg [42:0] y_mshifted;
-reg [42:0] m_sum;
+reg [42:0] sum;
 reg [5:0] e_sum;
 reg       s_sum;
 
-reg guard_bit;
-reg round_bit;
-reg sticky_bit;
-
-reg [9:0] m_norm;
-reg [5:0] e_norm;
 always @(*) begin
     // x   = 01MMMMMMMMMM00
     // y   = ___________01MMMMMMMMMM
@@ -65,95 +59,70 @@ always @(*) begin
     //
     // shift can be (0-31).
     x_mshifted = {2'b01, x_m, 31'h0};
-    y_mshifted = {2'b01, y_m, 31'h0} >> e_abs_diff[4:0];
-    m_sum = (oper)
+    y_mshifted = {2'b01, y_m, 31'h0} >> e_abs_diff;
+    sum = (oper)
         ? x_mshifted - y_mshifted
         : x_mshifted + y_mshifted;
 
     e_sum = {1'b0, x_e};
 
     s_sum = x_s;
-
-    // Normalize.
-    casez (m_sum[42:30])
-        13'b1????????????: begin
-            e_norm = e_sum + 6'd1;
-            {m_norm, guard_bit, round_bit} = m_sum[41:30];
-            sticky_bit = |m_sum[29:0];
-        end
-        13'b01???????????: begin
-            e_norm = e_sum;
-            {m_norm, guard_bit, round_bit} = m_sum[40:29];
-            sticky_bit = |m_sum[28:0];
-        end
-        13'b001??????????: begin
-            e_norm = e_sum - 6'd1;
-            {m_norm, guard_bit, round_bit} = m_sum[39:28];
-            sticky_bit = |m_sum[27:0];
-        end
-        13'b0001?????????: begin
-            e_norm = e_sum - 6'd2;
-            {m_norm, guard_bit, round_bit} = m_sum[38:27];
-            sticky_bit = |m_sum[26:0];
-        end
-        13'b00001????????: begin
-            e_norm = e_sum - 6'd3;
-            {m_norm, guard_bit, round_bit} = m_sum[37:26];
-            sticky_bit = |m_sum[25:0];
-        end
-        13'b000001???????: begin
-            e_norm = e_sum - 6'd4;
-            {m_norm, guard_bit, round_bit} = m_sum[36:25];
-            sticky_bit = |m_sum[24:0];
-        end
-        13'b0000001??????: begin
-            e_norm = e_sum - 6'd5;
-            {m_norm, guard_bit, round_bit} = m_sum[35:24];
-            sticky_bit = |m_sum[23:0];
-        end
-        13'b00000001?????: begin
-            e_norm = e_sum - 6'd6;
-            {m_norm, guard_bit, round_bit} = m_sum[34:23];
-            sticky_bit = |m_sum[22:0];
-        end
-        13'b000000001????: begin
-            e_norm = e_sum - 6'd7;
-            {m_norm, guard_bit, round_bit} = m_sum[33:22];
-            sticky_bit = |m_sum[21:0];
-        end
-        13'b0000000001???: begin
-            e_norm = e_sum - 6'd8;
-            {m_norm, guard_bit, round_bit} = m_sum[32:21];
-            sticky_bit = |m_sum[20:0];
-        end
-        13'b00000000001??: begin
-            e_norm = e_sum - 6'd9;
-            {m_norm, guard_bit, round_bit} = m_sum[31:20];
-            sticky_bit = |m_sum[19:0];
-        end
-        13'b000000000001?: begin
-            e_norm = e_sum - 6'd10;
-            {m_norm, guard_bit, round_bit} = m_sum[30:19];
-            sticky_bit = |m_sum[18:0];
-        end
-        13'b0000000000001: begin
-            e_norm = e_sum - 6'd11;
-            {m_norm, guard_bit, round_bit} = m_sum[29:18];
-            sticky_bit = |m_sum[17:0];
-        end
-        13'b000000000000: begin
-            m_norm = 10'h0;
-            guard_bit = 1'b0;
-            round_bit = 1'b0;
-            sticky_bit = 1'b0;
-            e_norm = 6'h0;
-        end
-    endcase
 end
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// 3) Clamp.
+// 3) Normalize.
+///////////////////////////////////////////////////////////////////////////////
+reg   [3:0] norm_shift;
+wire [42:0] norm_sum;
+
+wire [9:0] m_norm;
+wire [5:0] e_norm;
+wire       guard_bit;
+wire       round_bit;
+wire       sticky_bit;
+
+always @(*) begin
+    // Leading one detector.
+    //
+    // NOTE: If |a| != |b|, leading one may appear only on 13 positions.
+    // Worst case: subtract, shift=1 => one on 12-th position:
+    // a   = 010000000000
+    // b   = _011111111111
+    // sum = 0000000000001MMMMMMMMMMgr
+    //
+    // subtract, shift=2 => one on 2-nd position:
+    // a   = 010000000000
+    // b   = __011111111111
+    // sum = 00100000000001
+    casez (sum[42:30])
+        13'b1????????????: norm_shift = 4'd01;
+        13'b01???????????: norm_shift = 4'd02;
+        13'b001??????????: norm_shift = 4'd03;
+        13'b0001?????????: norm_shift = 4'd04;
+        13'b00001????????: norm_shift = 4'd05;
+        13'b000001???????: norm_shift = 4'd06;
+        13'b0000001??????: norm_shift = 4'd07;
+        13'b00000001?????: norm_shift = 4'd08;
+        13'b000000001????: norm_shift = 4'd09;
+        13'b0000000001???: norm_shift = 4'd10;
+        13'b00000000001??: norm_shift = 4'd11;
+        13'b000000000001?: norm_shift = 4'd12;
+        13'b0000000000001: norm_shift = 4'd13;
+        default          : norm_shift = 4'd14;
+    endcase
+end
+
+// If leading one is not detected result is zero.
+assign e_norm = (norm_shift == 4'd14) ? 6'd0 : e_sum - {2'b0, norm_shift} + 6'd2;
+assign norm_sum = sum << norm_shift;
+
+assign {m_norm, guard_bit, round_bit} = norm_sum[42:31];
+assign sticky_bit = |norm_sum[30:0];
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// 4) Clamp.
 ///////////////////////////////////////////////////////////////////////////////
 reg [9:0] m_clamped;
 reg [5:0] e_clamped;
@@ -178,7 +147,7 @@ end
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// 4) RoundTiesToEven.
+// 5) RoundTiesToEven.
 ///////////////////////////////////////////////////////////////////////////////
 reg [9:0] m_round;
 reg [4:0] e_round;
@@ -202,7 +171,7 @@ end
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-// 5) Handle special cases and obtain final result.
+// 6) Handle special cases and obtain final result.
 // a=0                  => res = b
 // b=0                  => res = a
 // a=NaN || b=NaN       => res = NaN
@@ -219,19 +188,27 @@ always @(*) begin
         // b is zero (DAZ) => res = a.
         {res_s, res_e, res_m} = i_a;
     end
-    else if (a_e == 5'b11111 || b_e == 5'b11111) begin
-        if (a_m != 10'h0 || b_m != 10'h0) begin
-            // One of opnds is NaN => NaN.
-            res_s = 1'b0;
-            res_e = 5'b11111;
-            res_m = 10'h77;
-        end
-        else if (a_m == 10'h0 && b_m == 10'h0) begin
-            // Both opnds are inf => inf/0, depending on signs.
-            res_s = a_s;
-            res_e = (a_s ^ b_s) ? 5'b00000 : 5'b11111;
-            res_m = 10'h0;
-        end
+    else if ((a_e == 5'b11111 && a_m != 10'h0)
+             || (b_e == 5'b11111 && b_m != 10'h0)) begin
+        // One of opnds is NaN => NaN.
+        res_s = 1'b0;
+        res_e = 5'b11111;
+        res_m = 10'h77;
+    end
+    else if ((a_e == 5'b11111 && a_m == 10'h0)
+            && (b_e == 5'b11111 && b_m == 10'h0)) begin
+        // Both opnds are inf => inf/0, depending on signs.
+        res_s = a_s;
+        res_e = (a_s ^ b_s) ? 5'b00000 : 5'b11111;
+        res_m = 10'h0;
+    end
+    else if (a_e == 5'b11111 && a_m == 10'h0) begin
+        // a=inf, b=normal => a.
+        {res_s, res_e, res_m} = i_a;
+    end
+    else if (b_e == 5'b11111 && b_m == 10'h0) begin
+        // a=normal, b=inf => b.
+        {res_s, res_e, res_m} = i_b;
     end
     else begin
         // Both opnds are normal.
