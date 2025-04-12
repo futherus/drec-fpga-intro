@@ -1,0 +1,35 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Sat Apr 12 19:26:58 2025
+[*]
+[dumpfile] "/home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/dump.vcd"
+[dumpfile_mtime] "Sat Apr 12 19:25:25 2025"
+[dumpfile_size] 2972662
+[savefile] "/home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/add.gtkw"
+[timestart] 4093976
+[size] 1920 984
+[pos] -461 -193
+*-10.618834 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 243
+[signals_width] 120
+[sst_expanded] 1
+[sst_vpaned_height] 285
+@4022
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.a[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.b[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.z[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.a_d[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.b_d[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.c_d[15:0]
+^>1 /home/futherus/Code/drec-fpga-intro/problems/2025/07_fp16pipe/fp16filter.py
+fp16u_tb.z_d[15:0]
+@29
+fp16u_tb.ok
+[pattern_trace] 1
+[pattern_trace] 0
