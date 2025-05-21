@@ -1,0 +1,17 @@
+`ifndef ALU_VH
+`define ALU_VH
+
+`define ALUOP_WIDTH 4
+`define ALUOP_ADD  `ALUOP_WIDTH'd00
+`define ALUOP_SUB  `ALUOP_WIDTH'd01
+`define ALUOP_SLL  `ALUOP_WIDTH'd02
+`define ALUOP_SLT  `ALUOP_WIDTH'd03
+`define ALUOP_SLTU `ALUOP_WIDTH'd04
+`define ALUOP_XOR  `ALUOP_WIDTH'd05
+`define ALUOP_SRL  `ALUOP_WIDTH'd06
+`define ALUOP_SRA  `ALUOP_WIDTH'd07
+`define ALUOP_OR   `ALUOP_WIDTH'd08
+`define ALUOP_AND  `ALUOP_WIDTH'd09
+`define ALUOP_X    `ALUOP_WIDTH'dX
+
+`endif

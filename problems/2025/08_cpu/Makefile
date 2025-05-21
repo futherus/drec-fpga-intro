@@ -32,8 +32,6 @@ RTL_LIST += 		\
 	src/dmem.v		\
 	src/mem_xbar.v	\
 	src/lsu.v		\
-	src/mux4.v		\
-	src/signext.v	\
 
 ifeq ($(GUI), 1)
 VSIM_FLAGS :=
@@ -61,11 +59,11 @@ VSIM_LIBS :=            \
 
 VSIM_LIBS := $(patsubst %,-L %,$(VSIM_LIBS))
 
-sim: $(TB_LIST) $(RTL_LIST)
+sim: preprocess_instr $(TB_LIST) $(RTL_LIST)
 ifeq ($(GATE), 1)
 	$(error Icarus Verilog doesn't support GLS)
 else
-	iverilog -s $(TOP_TB_NAME) -I./src/ $^ -o sim
+	iverilog -s $(TOP_TB_NAME) -I./src/ $(TB_LIST) $(RTL_LIST) -o sim
 	./sim
 endif
 
@@ -81,7 +79,7 @@ endif
 waves: $(VCD_FILE)
 	gtkwave $(VCD_FILE) &
 
-syn:
+syn: preprocess_instr
 	quartus_sh --flow compile fpga
 
 gui:
@@ -96,10 +94,15 @@ drc:
 samples:
 	$(MAKE) -C samples/
 
+preprocess_instr: src/instrs.mac.vh src/instrs.py
+
+src/instrs.mac.vh: src/instrs.yaml
+	cd src && python instrs.py
+
 clean:
 	rm -rf sim dump.vcd
 	rm -rf db incremental_db output fpga.qws greybox_tmp *.bak
 	rm -rf work transcript *.ver *.rpt simulation *.wlf *.ini gate_work rtl_work
 	$(MAKE) -C samples/ clean
 
-.PHONY: syn fpga clean samples gui sim waves vsim
+.PHONY: syn fpga clean samples gui sim waves vsim preprocess_instr

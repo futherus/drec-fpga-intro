@@ -1,0 +1,46 @@
+[
+#  OPER,               ENCODING, ALUOP, ALU1, ALU2,  WBSEL, WB, CMPOP, LSUOP,     TYPE
+[   LUI, '?????_??_???_0110111',     X,    X,    X,   UIMM,  1,     X,     X,   COMMON],
+[ AUIPC, '?????_??_???_0010111',   ADD, UIMM,   PC, ALURES,  1,     X,     X,   COMMON],
+
+[   JAL, '?????_??_???_1101111',   ADD, JIMM,   PC, PC_INC,  1,     X,     X,     JUMP],
+[  JALR, '?????_??_000_1100111',   ADD, REG1, IIMM, PC_INC,  1,     X,     X,     JUMP],
+[   BEQ, '?????_??_000_1100011',   ADD, BIMM,   PC,      X,  0,   BEQ,     X,   BRANCH],
+[   BNE, '?????_??_001_1100011',   ADD, BIMM,   PC,      X,  0,   BNE,     X,   BRANCH],
+[   BLT, '?????_??_100_1100011',   ADD, BIMM,   PC,      X,  0,   BLT,     X,   BRANCH],
+[   BGE, '?????_??_101_1100011',   ADD, BIMM,   PC,      X,  0,   BGE,     X,   BRANCH],
+[  BLTU, '?????_??_110_1100011',   ADD, BIMM,   PC,      X,  0,  BLTU,     X,   BRANCH],
+[  BGEU, '?????_??_111_1100011',   ADD, BIMM,   PC,      X,  0,  BGEU,     X,   BRANCH],
+
+[    LB, '?????_??_000_0000011',   ADD, REG1, IIMM,    LSU,  1,     X,     B,     LOAD],
+[    LH, '?????_??_001_0000011',   ADD, REG1, IIMM,    LSU,  1,     X,     H,     LOAD],
+[    LW, '?????_??_010_0000011',   ADD, REG1, IIMM,    LSU,  1,     X,     W,     LOAD],
+[   LBU, '?????_??_100_0000011',   ADD, REG1, IIMM,    LSU,  1,     X,    BU,     LOAD],
+[   LHU, '?????_??_101_0000011',   ADD, REG1, IIMM,    LSU,  1,     X,    HU,     LOAD],
+[    SB, '?????_??_000_0100011',   ADD, REG1, SIMM,      X,  0,     X,     B,    STORE],
+[    SH, '?????_??_001_0100011',   ADD, REG1, SIMM,      X,  0,     X,     H,    STORE],
+[    SW, '?????_??_010_0100011',   ADD, REG1, SIMM,      X,  0,     X,     W,    STORE],
+
+[  ADDI, '?????_??_000_0010011',   ADD, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+[  SLTI, '?????_??_010_0010011',   SLT, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+[ SLTIU, '?????_??_011_0010011',  SLTU, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+[  XORI, '?????_??_100_0010011',   XOR, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+[   ORI, '?????_??_110_0010011',    OR, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+[  ANDI, '?????_??_111_0010011',   AND, REG1, IIMM, ALURES,  1,     X,     X,   COMMON],
+# shamt not implemented
+# [  SLLI,
+# [  SRLI,
+# [  SRAI,
+
+[   ADD, '00000_00_000_0110011',   ADD, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   SUB, '01000_00_000_0110011',   SUB, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   SLL, '00000_00_001_0110011',   SLL, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   SLT, '00000_00_010_0110011',   SLT, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[  SLTU, '00000_00_011_0110011',  SLTU, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   XOR, '00000_00_100_0110011',   XOR, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   SRL, '00000_00_101_0110011',   SRL, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   SRA, '01000_00_101_0110011',   SRA, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[    OR, '00000_00_110_0110011',    OR, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+[   AND, '00000_00_111_0110011',   AND, REG1, REG2, ALURES,  1,     X,     X,   COMMON],
+]
+

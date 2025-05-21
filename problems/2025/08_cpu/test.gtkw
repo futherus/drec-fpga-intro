@@ -1,0 +1,125 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Tue Apr 15 16:02:11 2025
+[*]
+[dumpfile] "/home/futherus/Code/drec-fpga-intro/problems/2025/08_cpu/dump.vcd"
+[dumpfile_mtime] "Mon Apr 14 21:35:00 2025"
+[dumpfile_size] 9629957
+[savefile] "/home/futherus/Code/drec-fpga-intro/problems/2025/08_cpu/test.gtkw"
+[timestart] 25259
+[size] 1920 984
+[pos] -1 -1
+*-10.894476 31244 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu_top_tb.
+[treeopen] cpu_top_tb.cpu_top.
+[treeopen] cpu_top_tb.cpu_top.core.
+[treeopen] cpu_top_tb.cpu_top.core.cmp.
+[treeopen] cpu_top_tb.cpu_top.core.lsu.
+[treeopen] cpu_top_tb.cpu_top.dmem.
+[treeopen] cpu_top_tb.cpu_top.mem_xbar.
+[sst_width] 243
+[signals_width] 382
+[sst_expanded] 1
+[sst_vpaned_height] 285
+@28
+cpu_top_tb.clk
+cpu_top_tb.cpu_top.core.rst_n
+@4022
+[color] 5
+^>1 /home/futherus/Code/drec-fpga-intro/riscv-gtkwave/src/decode_inst
+cpu_top_tb.cpu_top.core.i_instr_data[31:0]
+@200
+-
+-CORE
+@22
+cpu_top_tb.cpu_top.core.f0_alu_opnd1[31:0]
+cpu_top_tb.cpu_top.core.f0_alu_opnd2[31:0]
+cpu_top_tb.cpu_top.core.f0_alu_res[31:0]
+cpu_top_tb.cpu_top.core.f1_lsu_load_data[31:0]
+@28
+cpu_top_tb.cpu_top.core.f0f1_wb_sel[1:0]
+cpu_top_tb.cpu_top.core.f0f1_wb_en
+@22
+cpu_top_tb.cpu_top.core.i_mem_data[31:0]
+@200
+-LSU
+@22
+cpu_top_tb.cpu_top.core.lsu.i_addr[31:0]
+@28
+cpu_top_tb.cpu_top.core.lsu.i_is_store
+@22
+cpu_top_tb.cpu_top.core.lsu.i_store_data[31:0]
+cpu_top_tb.cpu_top.core.lsu.o_load_data[31:0]
+@29
+cpu_top_tb.cpu_top.core.lsu.load_shift_d[1:0]
+@22
+cpu_top_tb.cpu_top.core.lsu.i_load_data[31:0]
+@200
+-REG FILE
+@22
+cpu_top_tb.cpu_top.core.reg_file.i_rd_addr1[4:0]
+cpu_top_tb.cpu_top.core.reg_file.o_rd_data1[31:0]
+cpu_top_tb.cpu_top.core.reg_file.i_rd_addr2[4:0]
+cpu_top_tb.cpu_top.core.reg_file.o_rd_data2[31:0]
+@28
+cpu_top_tb.cpu_top.core.reg_file.i_wr_en
+@22
+cpu_top_tb.cpu_top.core.reg_file.i_wr_addr[4:0]
+cpu_top_tb.cpu_top.core.reg_file.i_wr_data[31:0]
+@200
+-DMEM
+@22
+cpu_top_tb.cpu_top.dmem.i_data[31:0]
+cpu_top_tb.cpu_top.dmem.i_addr[7:0]
+@28
+cpu_top_tb.cpu_top.dmem.i_we
+@22
+cpu_top_tb.cpu_top.dmem.addr[7:0]
+cpu_top_tb.cpu_top.dmem.o_data[31:0]
+@200
+-MEM XBAR
+@22
+cpu_top_tb.cpu_top.mem_xbar.o_data[31:0]
+@200
+-CPU_top
+@c00022
+cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+@28
+(0)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(1)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(2)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(3)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(4)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(5)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(6)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(7)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(8)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(9)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(10)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(11)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(12)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(13)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(14)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(15)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(16)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(17)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(18)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(19)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(20)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(21)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(22)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(23)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(24)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(25)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(26)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(27)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(28)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+(29)cpu_top_tb.cpu_top.core2xbar_addr[29:0]
+@1401200
+-group_end
+@22
+cpu_top_tb.cpu_top.mem_xbar.i_addr[29:0]
+cpu_top_tb.cpu_top.mem_xbar.o_dmem_addr[29:0]
+cpu_top_tb.cpu_top.mem_xbar.o_mmio_addr[29:0]
+[pattern_trace] 1
+[pattern_trace] 0
