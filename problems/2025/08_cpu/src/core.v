@@ -88,15 +88,11 @@ end
 // Drive PC.
 ///////////////////////////////////////////////////////////////////////////////
 wire f0_is_taken = f0_is_jump || (f0_is_branch && f0_cmp_res);
-// reg  stall_satisfied;
 
 always @(*) begin
     if (f0_is_taken) begin
         f0_pc_next = f0_alu_res[31:2];
     end
-//    else if (is_load && !stall_satisfied) begin
-//        pc_next = pc;
-//    end
     else begin
         f0_pc_next = f0_pc_inc;
     end
@@ -112,6 +108,24 @@ always @(posedge clk or negedge rst_n) begin
 //        if (is_load) begin
 //            stall_satisfied <= !stall_satisfied;
 //        end
+    end
+end
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Calculate address for LSU.
+///////////////////////////////////////////////////////////////////////////////
+reg [31:0] f0_lsu_addr;
+
+always @(*) begin
+    if (f0_is_load) begin
+        f0_lsu_addr = f0_reg1 + f0_iimm;
+    end
+    else if (f0_is_store) begin
+        f0_lsu_addr = f0_reg1 + f0_simm;
+    end
+    else begin
+        f0_lsu_addr = 32'hX;
     end
 end
 ///////////////////////////////////////////////////////////////////////////////
@@ -208,7 +222,7 @@ lsu lsu(
 
     .i_is_store   (f0_is_store     ),
     .i_op         (f0_lsu_op       ),
-    .i_addr       (f0_alu_res      ),
+    .i_addr       (f0_lsu_addr     ),
     .i_store_data (f0_reg2         ),
     .o_load_data  (f1_lsu_load_data),
 
